@@ -1,0 +1,36 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: team-a-service
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/name: team-a-service-source
+    app.kubernetes.io/part-of: gitops-poc
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  url: https://github.com/Duggireddy-NSF/team-a-service.git
+  ignore: |
+    # Ignore non-essential files for faster sync
+    *.md
+    .github/
+    src/
+    target/
+    .mvn/
+    *.log
+  # secretRef:
+  #   name: github-auth-secret  # Uncomment if repository is private
+---
+# Optional: GitHub authentication secret for private repositories
+# Uncomment and configure if the repository is private
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: github-auth-secret
+#   namespace: flux-system
+# type: Opaque
+# data:
+#   username: <base64-encoded-github-username>
+#   password: <base64-encoded-github-token>

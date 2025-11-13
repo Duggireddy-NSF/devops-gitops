@@ -1,0 +1,27 @@
+apiVersion: v2
+name: spring-boot-base
+description: Base Helm chart for Spring Boot microservices in GitOps environment
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - spring-boot
+  - microservice
+  - gitops
+  - kubernetes
+  - java
+
+home: https://github.com/Duggireddy-NSF
+sources:
+  - https://github.com/Duggireddy-NSF
+
+maintainers:
+  - name: DevOps Team
+    email: devops@example.com
+
+annotations:
+  category: Application Framework
+  licenses: Apache-2.0
+  toolkit.fluxcd.io/description: "Base Helm chart template for Spring Boot applications"
+  github.com/packages-integration: "true"

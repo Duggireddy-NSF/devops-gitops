@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitops-poc
+  labels:
+    name: gitops-poc
+    toolkit.fluxcd.io/tenant: gitops-poc
+  annotations:
+    toolkit.fluxcd.io/description: "GitOps POC namespace for application deployments"
+spec: {}

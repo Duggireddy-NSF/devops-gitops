@@ -1,0 +1,145 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: team-a-service
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/name: team-a-service-release
+    app.kubernetes.io/part-of: gitops-poc
+spec:
+  interval: 10m
+  targetNamespace: gitops-poc
+  chart:
+    spec:
+      chart: ./helm
+      version: '*'
+      sourceRef:
+        kind: GitRepository
+        name: team-a-service
+        namespace: flux-system
+  values:
+    # Override default values for GitOps deployment
+    app:
+      name: team-a-service
+      version: "1.0.0"
+    
+    image:
+      registry: ghcr.io
+      repository: duggireddy-nsf/team-a-service
+      pullPolicy: IfNotPresent
+      # Tag will be automatically updated by GitHub Actions
+    
+    imagePullSecrets:
+      - name: github-packages-secret
+    
+    service:
+      type: ClusterIP
+      port: 80
+      targetPort: 8080
+    
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      hosts:
+        - host: team-a-service.local
+          paths:
+            - path: /
+              pathType: Prefix
+      tls: []
+    
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+    
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 3
+      targetCPUUtilizationPercentage: 80
+    
+    # Enable health checks
+    health:
+      livenessProbe:
+        httpGet:
+          path: /actuator/health/liveness
+          port: http
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /actuator/health/readiness
+          port: http
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 3
+    
+    # Environment configuration
+    env:
+      - name: SPRING_PROFILES_ACTIVE
+        value: "kubernetes"
+      - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+        value: "health,info,metrics,prometheus"
+      - name: APP_VERSION
+        value: "1.0.0"
+    
+    # Security context
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001
+      fsGroup: 1001
+    
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: false
+    
+    # Service monitor for Prometheus (optional)
+    serviceMonitor:
+      enabled: false
+      interval: 30s
+      path: /actuator/prometheus
+      labels:
+        app.kubernetes.io/name: team-a-service
+  
+  # Installation configuration
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  
+  # Upgrade configuration
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+  
+  # Rollback configuration
+  rollback:
+    cleanupOnFail: true
+    force: false
+  
+  # Health checks for the HelmRelease
+  test:
+    enable: true
+  
+  # Drift detection
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths: ["/spec/replicas"]
+        target:
+          kind: Deployment
