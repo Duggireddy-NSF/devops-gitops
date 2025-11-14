@@ -42,7 +42,7 @@ spec:
       enabled: true
       className: "traefik"
       annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: /
+        traefik.ingress.kubernetes.io/router.entrypoints: web
       hosts:
         - host: team-a-service.local
           paths:
