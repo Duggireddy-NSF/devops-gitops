@@ -27,7 +27,7 @@ spec:
     image:
       registry: ghcr.io
       repository: duggireddy-nsf/team-a-service
-      pullPolicy: IfNotPresent
+      pullPolicy: Always 
       # Tag will be automatically updated by GitHub Actions
     
     imagePullSecrets:
