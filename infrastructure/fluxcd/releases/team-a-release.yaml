@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: team-a-service-release
     app.kubernetes.io/part-of: gitops-poc
 spec:
-  interval: 10m
+  interval: 1m
   targetNamespace: gitops-poc
   chart:
     spec:
