@@ -40,7 +40,7 @@ spec:
     
     ingress:
       enabled: true
-      className: "nginx"
+      className: "traefik"
       annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /
       hosts:
