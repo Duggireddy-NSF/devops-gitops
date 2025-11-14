@@ -22,16 +22,16 @@ spec:
     # Override default values for GitOps deployment
     app:
       name: team-a-service
-      version: "1.0.0"
+      version: "1.0.1"
     
-    image:
-      registry: ghcr.io
-      repository: duggireddy-nsf/team-a-service
-      pullPolicy: Always 
-      # Tag will be automatically updated by GitHub Actions
+    #image:
+    # registry: ghcr.io
+    #  repository: duggireddy-nsf/team-a-service
+    #  pullPolicy: Always 
+     # Tag will be automatically updated by GitHub Actions
     
-    imagePullSecrets:
-      - name: github-packages-secret
+    #imagePullSecrets:
+    #  - name: github-packages-secret
     
     service:
       type: ClusterIP
