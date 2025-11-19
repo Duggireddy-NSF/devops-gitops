@@ -64,8 +64,8 @@ spec:
         memory: 256Mi
     
     autoscaling:
-      enabled: false
-      minReplicas: 1
+      enabled: true
+      minReplicas: 2
       maxReplicas: 3
       targetCPUUtilizationPercentage: 80
     
