@@ -43,7 +43,7 @@ securityContext:
 
 # Service configuration
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
   targetPort: 8080
   annotations: {}
